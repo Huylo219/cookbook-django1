@@ -1,0 +1,32 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}Главная - Кулинарная книга{% endblock %}
+
+{% block content %}
+<h2>Все рецепты</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px;">
+    {% for recipe in recipes %}
+    <div style="background: #f8f9fa; border-radius: 12px; padding: 20px;">
+        <h3>{{ recipe.title }}</h3>
+        {% with avg_rating=recipe.average_rating reviews_count=recipe.reviews_count %}
+            {% if reviews_count > 0 %}
+                <div style="color: #ffc107; margin: 10px 0;">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= avg_rating %}★{% else %}☆{% endif %}
+                    {% endfor %}
+                    <span style="color: #666;">({{ reviews_count }} отзывов)</span>
+                </div>
+            {% else %}
+                <div style="color: #999; margin: 10px 0;">⭐ Нет отзывов</div>
+            {% endif %}
+        {% endwith %}
+        <div style="margin-top: 15px;">
+            <a href="{% url 'recipes:recipe_detail' recipe.id %}" style="color: #667eea;">🔍 Смотреть</a>
+            <a href="{% url 'recipes:delete_recipe' recipe.id %}" style="color: #dc3545; margin-left: 15px;" onclick="return confirm('Удалить рецепт?')">🗑️ Удалить</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>😕 Пока нет рецептов. <a href="{% url 'recipes:add_recipe' %}">Добавьте первый!</a></p>
+    {% endfor %}
+</div>
+{% endblock %}

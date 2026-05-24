@@ -1,0 +1,79 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block content %}
+<div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <h2>🍽️ {{ recipe.title }}</h2>
+    {% with avg_rating=recipe.average_rating reviews_count=recipe.reviews_count %}
+        {% if reviews_count > 0 %}
+            <div style="color: #ffc107; margin: 15px 0;">
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= avg_rating %}★{% else %}☆{% endif %}
+                {% endfor %}
+                <span style="color: #666;">⭐ {{ avg_rating|floatformat:1 }}/5 ({{ reviews_count }} отзывов)</span>
+            </div>
+        {% else %}
+            <div style="color: #999; margin: 15px 0;">⭐ Пока нет отзывов. Будьте первым!</div>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <h3>📝 Ингредиенты:</h3>
+    <pre style="white-space: pre-wrap; font-family: inherit; background: white; padding: 15px; border-radius: 8px;">{{ recipe.ingredients }}</pre>
+</div>
+
+<div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <h3>👨‍🍳 Приготовление:</h3>
+    <pre style="white-space: pre-wrap; font-family: inherit; background: white; padding: 15px; border-radius: 8px;">{{ recipe.instructions }}</pre>
+</div>
+
+<div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+    <h3>📝 Отзывы посетителей:</h3>
+    {% for review in reviews %}
+    <div style="background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>
+                <strong>{{ review.author }}</strong>
+                <span style="color: #ffc107; margin-left: 10px;">
+                    {% for i in "12345"|make_list %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}
+                </span>
+            </div>
+            <div>
+                <small style="color: #999;">{{ review.created_at|date:"d.m.Y H:i" }}</small>
+                <a href="{% url 'recipes:delete_review' review.id %}" style="color: #dc3545; margin-left: 10px;" onclick="return confirm('Удалить отзыв?')">🗑️</a>
+            </div>
+        </div>
+        <p>{{ review.comment }}</p>
+    </div>
+    {% empty %}
+    <p style="color: #999;">Пока нет отзывов. Оставьте первый отзыв!</p>
+    {% endfor %}
+    
+    <div style="margin-top: 20px;">
+        <h4>💬 Оставить отзыв:</h4>
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <label>Ваше имя:</label>
+                {{ form.author }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Оценка:</label>
+                {{ form.rating }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Ваш отзыв:</label>
+                {{ form.comment }}
+            </div>
+            <button type="submit">📝 Отправить отзыв</button>
+        </form>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'recipes:index' %}" style="color: #667eea;">← Назад к рецептам</a>
+    <a href="{% url 'recipes:delete_recipe' recipe.id %}" style="color: #dc3545; margin-left: 20px;" onclick="return confirm('Удалить рецепт и все отзывы?')">🗑️ Удалить рецепт</a>
+</div>
+{% endblock %}
