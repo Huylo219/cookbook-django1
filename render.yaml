@@ -11,4 +11,4 @@ services:
       - key: RENDER
         value: true
       - key: DATABASE_URL
-        value: "postgresql://..."  # ← вставьте скопированную ссылку
+        value: "postgresql://Internal Database URL"
