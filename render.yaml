@@ -11,6 +11,4 @@ services:
       - key: RENDER
         value: true
       - key: DATABASE_URL
-        fromDatabase:
-          name: cookbook-db
-          property: connectionString
+        value: "postgresql://..."  
