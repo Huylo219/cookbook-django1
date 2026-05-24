@@ -11,4 +11,4 @@ services:
       - key: RENDER
         value: true
       - key: DATABASE_URL
-        value: "postgresql://Internal Database URL"
+        value: "postgresql://cookbook_db_3cg8_user:ZNjhhLC1iSPYKuj5xm1QlmgALBpp2ukC@dpg-d89g3a7avr4c73ck351g-a/cookbook_db_3cg8"
