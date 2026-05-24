@@ -11,5 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# ЭТОТ СКРИПТ ВЫПОЛНИТ МИГРАЦИИ ПРИ ЗАПУСКЕ
-CMD sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn cookbook.wsgi:application --bind 0.0.0.0:10000"
+# Делаем скрипт запуска исполняемым
+RUN chmod +x start.sh
+
+# Запускаем через start.sh, который выполнит миграции
+CMD ["./start.sh"]
